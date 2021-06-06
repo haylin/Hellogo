@@ -10,7 +10,8 @@ import (
 
 func errWarp(uid int) (string, error) {
 	//数据库连接
-	db, err := sql.Open("mysql", "root:123456Aa(127.0.0.1:3306)/geekdb?charset=utf8")
+	db, err := sql.Open("mysql", "root:123456Aa@tcp(127.0.0.1:3306)/geekdb?charset=utf8")
+	db.Ping()
 	if err != nil {
 		fmt.Errorf("访问数据库失败，请检查！")
 	}
@@ -21,12 +22,13 @@ func errWarp(uid int) (string, error) {
 		name string
 	)
 
-	err = db.QueryRow("select name from tb_user where uid = ?", uid).Scan(&name)
+	err = db.QueryRow("select name from tb_user where id = ?", uid).Scan(&name)
+
 	if err != nil {
-		fmt.Println("查询的数据不存在")
+		fmt.Println("query error")
 		if err == sql.ErrNoRows {
 			//log.Println("sql.ErrNoRows")
-			return "", fmt.Errorf("%s, 数据为空", err)
+			return "", fmt.Errorf("%w, 数据为空", err)
 		}
 		log.Fatal(err)
 	}
