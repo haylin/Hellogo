@@ -39,7 +39,7 @@ func main() {
 	_, err := errWarp(100)
 	err = errors.Unwrap(err)
 	if errors.Is(err, sql.ErrNoRows) {
-		fmt.Println("%s", err)
+		fmt.Println(err)
 	}
 
 }
